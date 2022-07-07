@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shopping_app/controller/cart_controller.dart';
 import 'package:shopping_app/controller/shopping_controller.dart';
 
 class ShoppingPage extends StatelessWidget {
   ShoppingPage({Key? key}) : super(key: key);
   final shoppingController = Get.put(ShoppingController());
+  final cartController = Get.put(CartController());
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,10 @@ class ShoppingPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              ElevatedButton(onPressed: (){}, child: Text('Add to cart'))
+                              ElevatedButton(onPressed: (){
+                                cartController.addToItem(controller.products[index]);
+                              }
+                              , child: Text('Add to cart'))
                             ],
                           ),
                         ),
@@ -56,8 +61,12 @@ class ShoppingPage extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
-          Text('Total amount',
-            style: TextStyle(fontSize: 25, color: Colors.white),
+          GetX<CartController>(
+            builder: (controller) {
+              return Text('Total amount: \$ ${controller.totalPrice}',
+                style: TextStyle(fontSize: 25, color: Colors.white),
+              );
+            }
           ),
           SizedBox(
             height: 100,
@@ -66,10 +75,14 @@ class ShoppingPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {},
-          label: Text(
-            'item',
-            style: TextStyle(fontSize: 20
-            ),
+          label: GetX<CartController>(
+            builder: (controller) {
+              return Text(
+                cartController.count.toString(),
+                style: TextStyle(fontSize: 20
+                ),
+              );
+            }
           ),
           icon: Icon(Icons.add_shopping_cart_rounded),
       backgroundColor: Colors.black87,
